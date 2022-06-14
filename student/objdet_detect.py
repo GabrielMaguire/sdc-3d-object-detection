@@ -239,9 +239,9 @@ def detect_objects(input_bev_maps, model, configs):
             y_range = configs.lim_y[1] - configs.lim_y[0]
 
             x = _y / configs.bev_height * x_range
-            y = _x / configs.bev_width * y_range
-            w = _w / configs.bev_width * y_range - (y_range / 2.0)
-            l = _l / configs.bev_width * x_range
+            y = _x / configs.bev_width * y_range - (y_range / 2.0)
+            w = _w / configs.bev_width * y_range
+            l = _l / configs.bev_height * x_range
         
             ## step 4 : append the current object to the 'objects' array
             objects.append([1, x, y, _z, _h, w, l, _yaw])

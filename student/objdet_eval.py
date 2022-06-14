@@ -75,14 +75,12 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
                 det_poly = Polygon(det_bb)
 
                 iou = gt_poly.intersection(det_poly).area / gt_poly.union(det_poly).area
-                # print(iou)
+                print(iou)
                 
                 ## step 6 : if IOU exceeds min_iou threshold, store [iou,dist_x, dist_y, dist_z] in matches_lab_det and increase the TP count
                 if iou > min_iou:
-                    matches_lab_det.append(np.append(_cls, center_dist))
+                    matches_lab_det.append(np.append(iou, center_dist))
                     true_positives += 1
-            #     break
-            # break
                 
             #######
             ####### ID_S4_EX1 END #######     
@@ -93,8 +91,9 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             ious.append(best_match[0])
             center_devs.append(best_match[1:])
 
-    print(ious)
-    print(center_devs)
+    print(f"ious: {ious}")
+    print(f"center_devs: {center_devs}")
+    print(f"true_positives: {true_positives}")
     ####### ID_S4_EX2 START #######     
     #######
     print("student task ID_S4_EX2")
