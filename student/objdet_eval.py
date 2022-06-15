@@ -41,6 +41,7 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
     for label, valid in zip(labels, labels_valid):
         matches_lab_det = []
         if valid: # exclude all labels from statistics which are not considered valid
+            # print(f"label.type: {label.type}")
             
             # compute intersection over union (iou) and distance between centers
 
@@ -75,7 +76,7 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
                 det_poly = Polygon(det_bb)
 
                 iou = gt_poly.intersection(det_poly).area / gt_poly.union(det_poly).area
-                print(iou)
+                # print(f"iou: {iou}")
                 
                 ## step 6 : if IOU exceeds min_iou threshold, store [iou,dist_x, dist_y, dist_z] in matches_lab_det and increase the TP count
                 if iou > min_iou:
@@ -91,9 +92,10 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             ious.append(best_match[0])
             center_devs.append(best_match[1:])
 
-    print(f"ious: {ious}")
-    print(f"center_devs: {center_devs}")
-    print(f"true_positives: {true_positives}")
+    # print(f"ious: {ious}")
+    # print(f"center_devs: {center_devs}")
+    # print(f"true_positives: {true_positives}")
+
     ####### ID_S4_EX2 START #######     
     #######
     print("student task ID_S4_EX2")
@@ -101,13 +103,13 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
     # compute positives and negatives for precision/recall
     
     ## step 1 : compute the total number of positives present in the scene
-    all_positives = 0
+    all_positives = np.sum(labels_valid)
 
     ## step 2 : compute the number of false negatives
-    false_negatives = 0
+    false_negatives = np.max((all_positives - true_positives), 0)
 
     ## step 3 : compute the number of false positives
-    false_positives = 0
+    false_positives = len(detections) - true_positives
     
     #######
     ####### ID_S4_EX2 END #######     
@@ -135,12 +137,14 @@ def compute_performance_stats(det_performance_all):
     print('student task ID_S4_EX3')
 
     ## step 1 : extract the total number of positives, true positives, false negatives and false positives
+    pos, tp, fn, fp = np.sum(pos_negs, axis=0)
+    # print(pos, tp, fn, fp)
     
     ## step 2 : compute precision
-    precision = 0.0
+    precision = tp / (tp + fp)
 
     ## step 3 : compute recall 
-    recall = 0.0
+    recall = tp / (tp + fn)
 
     #######    
     ####### ID_S4_EX3 END #######     
