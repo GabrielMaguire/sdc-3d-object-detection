@@ -10,6 +10,9 @@
 # ----------------------------------------------------------------------
 #
 
+# This file heavily draws on code from https://github.com/maudzung/SFA3D as instructed
+# to do by the Udacity project.
+
 # general package imports
 import numpy as np
 import torch
