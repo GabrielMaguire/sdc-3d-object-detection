@@ -31,7 +31,10 @@ class Filter:
         # TODO Step 1: implement and return system matrix F
         ############
 
-        return 0
+        F = np.identity(6)
+        F[[0, 1, 2], [3, 4, 5]] = params.dt
+
+        return F
         
         ############
         # END student code
@@ -42,7 +45,18 @@ class Filter:
         # TODO Step 1: implement and return process noise covariance Q
         ############
 
-        return 0
+        q1 = (np.power(params.dt, 3) / 3) * params.q
+        q2 = (np.power(params.dt, 2) / 2) * params.q
+        q3 = params.dt * params.q
+
+        return np.matrix(
+            [[q1, 0, 0, q2, 0, 0],
+             [0, q1, 0, 0, q2, 0],
+             [0, 0, q1, 0, 0, q2],
+             [q2, 0, 0, q3, 0, 0],
+             [0, q2, 0, 0, q3, 0],
+             [0, 0, q2, 0, 0, q3]]
+        )
         
         ############
         # END student code
@@ -53,7 +67,14 @@ class Filter:
         # TODO Step 1: predict state x and estimation error covariance P to next timestep, save x and P in track
         ############
 
-        pass
+        F = self.F()
+        Q = self.Q()
+
+        x = F * track.x
+        P = F * track.P * F.transpose() + Q
+
+        track.set_x(x)
+        track.set_P(P)
         
         ############
         # END student code
@@ -64,6 +85,17 @@ class Filter:
         # TODO Step 1: update state x and covariance P with associated measurement, save x and P in track
         ############
         
+        gamma = self.gamma(track, meas)
+        H = meas.sensor.get_H(track.x)
+        S = self.S(track, meas, H)
+        K = track.P * H.transpose() * np.linalg.inv(S)
+        I = np.identity(params.dim_state)
+        x = track.x + K * gamma
+        P = (I - K * H) * track.P
+
+        track.set_x(x)
+        track.set_P(P)
+
         ############
         # END student code
         ############ 
@@ -74,7 +106,7 @@ class Filter:
         # TODO Step 1: calculate and return residual gamma
         ############
 
-        return 0
+        return meas.z - meas.sensor.get_hx(track.x)
         
         ############
         # END student code
@@ -85,7 +117,7 @@ class Filter:
         # TODO Step 1: calculate and return covariance of residual S
         ############
 
-        return 0
+        return H * track.P * H.transpose() + meas.R
         
         ############
         # END student code
