@@ -45,3 +45,5 @@ In a scenario with a higher concentration of vehicles, the track association alg
 ## Improvements
 
 For potential improvements I could investigate fine-tuning the various threshold parameters and conditions for initializing, changing, and deleting tracks. This is one of the areas that I noticed significant change in the output results when experimenting.
+
+![](https://github.com/GabrielMaguire/sdc-3d-object-detection/blob/main/my_tracking_results.avi)
